@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:vpn_app_test/src/features/features.dart';
-import 'package:vpn_app_test/src/ui_kit/ui_kit.dart';
+
+import 'package:vpn_app_test/src/src.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 enum RouterPath {
   home("/home_vpn"),
-  favorite("/settings"),
+  settings("/settings"),
   ;
 
   const RouterPath(this.path);
@@ -34,7 +34,7 @@ final router = GoRouter(
           ),
         ),
         GoRoute(
-          path: RouterPath.home.path,
+          path: RouterPath.settings.path,
           pageBuilder: (context, state) => const NoTransitionPage(
             child: SettingsScreen(),
           ),
@@ -65,10 +65,32 @@ class ScaffoldVpnApp extends StatelessWidget {
                 image: AssetImage(_backgroundImage),
               ),
             ),
-            Column(
-              children: [
-                child,
-              ],
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    child,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => context.go(RouterPath.home.path),
+                          child: const Text('Home'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => context.go(RouterPath.settings.path),
+                          child: const Text('Settings'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         );
