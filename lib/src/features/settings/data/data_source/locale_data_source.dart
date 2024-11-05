@@ -11,7 +11,8 @@ class LocaleSettingsDataSourceImpl implements SettingsDataSource {
 
   final SharedPreferencesManager _prefs;
 
-  LocaleSettingsDataSourceImpl({required SharedPreferencesManager prefsManager}) : _prefs = prefsManager;
+  LocaleSettingsDataSourceImpl({required SharedPreferencesManager prefsManager})
+      : _prefs = prefsManager;
 
   @override
   Future<SettingsEntity?> read() {
@@ -21,12 +22,14 @@ class LocaleSettingsDataSourceImpl implements SettingsDataSource {
       return Future.value(null);
     }
 
+    final values = res.split(',');
+
     return Future.value(
       SettingsEntity(
         // TODO: add deserealization
-        serverAddress: res[0],
-        login: res[1],
-        password: res[2],
+        serverAddress: values[0],
+        login: values[1],
+        password: values[2],
       ),
     );
   }
