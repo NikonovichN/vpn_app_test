@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:vpn_app_test/src/src.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await const DependencyInjections().registerDependencies();
+
   runApp(const MyApp());
 }
 
