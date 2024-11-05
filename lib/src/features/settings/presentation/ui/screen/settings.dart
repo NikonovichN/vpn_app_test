@@ -86,17 +86,20 @@ class _SettingsState extends State<Settings> {
                   initialValue: widget.state?.password,
                 ),
                 _emptySpaceL,
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      context.read<SettingsCubit>().save(
-                            serverAddress: _addressServerTextController.text,
-                            login: _loginTextController.text,
-                            password: _passwordTextController.text,
-                          );
-                    }
-                  },
-                  child: const Text(_textButton),
+                SizedBox(
+                  width: double.infinity,
+                  child: VpnAppButton.primary(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<SettingsCubit>().save(
+                              serverAddress: _addressServerTextController.text,
+                              login: _loginTextController.text,
+                              password: _passwordTextController.text,
+                            );
+                      }
+                    },
+                    child: const Text(_textButton),
+                  ),
                 )
               ],
             ),

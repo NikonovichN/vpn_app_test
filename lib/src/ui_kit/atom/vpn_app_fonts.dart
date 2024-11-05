@@ -34,4 +34,10 @@ class VpnAppFonts {
     fontWeight: FontWeight.w400,
     color: BasicVpnAppColors.white,
   );
+
+  static const TextStyle primaryButton = TextStyle(
+    fontSize: 16,
+    fontFamily: defaultFontFamily,
+    fontWeight: FontWeight.w600,
+  );
 }
