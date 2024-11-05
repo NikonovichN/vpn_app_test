@@ -5,9 +5,9 @@ import '../../domain/repository/setting_repository.dart';
 import '../data_source/locale_data_source.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  final DataSource _dataSource;
+  final SettingsDataSource _dataSource;
 
-  const SettingsRepositoryImpl({required DataSource dataSource}) : _dataSource = dataSource;
+  const SettingsRepositoryImpl({required SettingsDataSource dataSource}) : _dataSource = dataSource;
 
   @override
   Future<Either<SettingsRepositoryError, SettingsEntity>> read() async {

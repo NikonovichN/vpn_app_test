@@ -1,17 +1,17 @@
 import 'package:vpn_app_test/src/managers/shared_preferences_manager.dart';
 import '../../domain/entity/settings.dart';
 
-abstract class DataSource {
+abstract class SettingsDataSource {
   Future<SettingsEntity?> read();
   Future<void> save(SettingsEntity settings);
 }
 
-class LocaleDataSourceImpl implements DataSource {
+class LocaleSettingsDataSourceImpl implements SettingsDataSource {
   static const _vpnConnectSettingsKey = 'vpn_connect_settings';
 
   final SharedPreferencesManager _prefs;
 
-  LocaleDataSourceImpl({required SharedPreferencesManager prefsManager}) : _prefs = prefsManager;
+  LocaleSettingsDataSourceImpl({required SharedPreferencesManager prefsManager}) : _prefs = prefsManager;
 
   @override
   Future<SettingsEntity?> read() {
