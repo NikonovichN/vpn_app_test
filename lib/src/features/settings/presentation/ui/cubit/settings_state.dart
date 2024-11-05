@@ -17,6 +17,9 @@ final class SettingsLoaded extends SettingsState {
   final String password;
 
   const SettingsLoaded({required this.serverAddress, required this.login, required this.password});
+
+  @override
+  List<Object> get props => [serverAddress, login, password];
 }
 
 final class SettingsError extends SettingsState {

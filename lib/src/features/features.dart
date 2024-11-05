@@ -5,3 +5,4 @@ export 'settings/data/repository/settings_repository.dart';
 export 'settings/domain/repository/setting_repository.dart';
 export 'settings/domain/entity/settings.dart';
 export 'settings/presentation/ui/cubit/settings_cubit.dart';
+export 'home_vpn/presentation/ui/cubit/vpn_cubit.dart';

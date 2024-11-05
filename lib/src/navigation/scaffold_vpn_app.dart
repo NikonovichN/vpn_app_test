@@ -20,6 +20,9 @@ class ScaffoldVpnApp extends StatelessWidget {
         BlocProvider<SettingsCubit>(
           create: (_) => injector<SettingsCubit>()..load(),
         ),
+        BlocProvider<VpnCubit>(
+          create: (_) => injector<VpnCubit>()..initialize(),
+        ),
       ],
       child: Scaffold(
         backgroundColor: BasicVpnAppColors.dark,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../src.dart';
 
 class HomeVPNScreen extends StatelessWidget {
@@ -7,14 +9,28 @@ class HomeVPNScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Text('917 VPN', style: VpnAppFonts.appTitle),
-        Text(
-          'Here will be turn/off widget',
-          style: VpnAppFonts.regular,
-        ),
-      ],
+    return BlocBuilder<VpnCubit, VpnState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            const Text('917 VPN', style: VpnAppFonts.appTitle),
+            SizedBox(
+              width: double.infinity,
+              child: VpnAppButton.primary(
+                onPressed: context.read<VpnCubit>().start,
+                child: const Text('Start VPN'),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: VpnAppButton.primary(
+                onPressed: context.read<VpnCubit>().stop,
+                child: const Text('Stop VPN'),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
