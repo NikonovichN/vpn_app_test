@@ -8,6 +8,13 @@ class BasicVpnAppColors {
   static const Color black = Color.fromRGBO(0, 0, 0, 1.0);
   static const Color grey = Color.fromRGBO(109, 109, 109, 1);
   static const Color main = Color.fromRGBO(219, 248, 122, 1.0);
+
+  static const Color borderSwitcher = Color.fromRGBO(219, 248, 122, .4);
+  static const Color switcherDisabled = Color.fromRGBO(219, 248, 122, .3);
+  static const Color switcherEnabled = main;
+  static const Color switcherTextOff = Color.fromRGBO(255, 255, 255, 0.4);
+  static const Color switcherTextOn = white;
+
   static const Color mainPressed = Color.fromRGBO(233, 253, 168, 1);
   static const Color mainDisabled = Color.fromARGB(255, 224, 228, 211);
 
