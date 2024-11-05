@@ -38,8 +38,6 @@ class ScaffoldVpnApp extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       child,
                       Row(

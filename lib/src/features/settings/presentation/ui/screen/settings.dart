@@ -33,6 +33,8 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   // TODO: should be intl
+  static const _settingsTitleMobile = 'Настройки';
+  static const _settingsTitleDesktop = '917 VPN';
   static const _addressHint = 'Адрес сервера';
   static const _loginHint = 'Логин';
   static const _passwordHint = 'Пароль';
@@ -48,44 +50,57 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 320.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          _SettingTextFormField(
-            hint: _addressHint,
-            initialValue: widget.state?.serverAddress,
-            controller: _addressServerTextController,
+          SizedBox(height: isDesktop ? 96.0 : (30.0 + MediaQuery.paddingOf(context).top)),
+          Text(
+            isDesktop ? _settingsTitleDesktop : _settingsTitleMobile,
+            style: isDesktop ? VpnAppFonts.appTitle : VpnAppFonts.regularBold,
           ),
-          _emptySpaceM,
-          _SettingTextFormField(
-            hint: _loginHint,
-            initialValue: widget.state?.login,
-            controller: _loginTextController,
+          SizedBox(height: isDesktop ? 140.0 : 40.0),
+          Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _SettingTextFormField(
+                  hint: _addressHint,
+                  initialValue: widget.state?.serverAddress,
+                  controller: _addressServerTextController,
+                ),
+                _emptySpaceM,
+                _SettingTextFormField(
+                  hint: _loginHint,
+                  initialValue: widget.state?.login,
+                  controller: _loginTextController,
+                ),
+                _emptySpaceM,
+                _SettingTextFormField(
+                  hint: _passwordHint,
+                  obscureText: true,
+                  controller: _passwordTextController,
+                  initialValue: widget.state?.password,
+                ),
+                _emptySpaceL,
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.read<SettingsCubit>().save(
+                            serverAddress: _addressServerTextController.text,
+                            login: _loginTextController.text,
+                            password: _passwordTextController.text,
+                          );
+                    }
+                  },
+                  child: const Text(_textButton),
+                )
+              ],
+            ),
           ),
-          _emptySpaceM,
-          _SettingTextFormField(
-            hint: _passwordHint,
-            obscureText: true,
-            controller: _passwordTextController,
-            initialValue: widget.state?.password,
-          ),
-          _emptySpaceL,
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                context.read<SettingsCubit>().save(
-                      serverAddress: _addressServerTextController.text,
-                      login: _loginTextController.text,
-                      password: _passwordTextController.text,
-                    );
-              }
-            },
-            child: const Text(_textButton),
-          )
         ],
       ),
     );
@@ -110,6 +125,9 @@ class _SettingTextFormField extends StatefulWidget {
 }
 
 class __SettingTextFormFieldState extends State<_SettingTextFormField> {
+  // TODO: should be intl
+  static const _errorMessage = 'Please enter some text';
+
   late final TextEditingController _controller;
 
   @override
@@ -129,18 +147,41 @@ class __SettingTextFormFieldState extends State<_SettingTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _controller,
-      obscureText: widget.obscureText,
-      decoration: InputDecoration(
-        hintText: widget.hint,
+    return Container(
+      height: 60.0,
+      decoration: const BoxDecoration(
+        color: BasicVpnAppColors.textForm,
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter some text';
-        }
-        return null;
-      },
+      child: TextFormField(
+        controller: _controller,
+        obscureText: widget.obscureText,
+        cursorColor: BasicVpnAppColors.main,
+        style: VpnAppFonts.inputHelper.copyWith(color: BasicVpnAppColors.main),
+        decoration: InputDecoration(
+          hintText: widget.hint,
+          fillColor: BasicVpnAppColors.textForm,
+          hintStyle: VpnAppFonts.inputHelper,
+          disabledBorder: const KitTextFormOutlineInputBorder(
+            borderSide: BorderSide(color: BasicVpnAppColors.textForm),
+          ),
+          enabledBorder: const KitTextFormOutlineInputBorder(
+            borderSide: BorderSide(color: BasicVpnAppColors.textForm),
+          ),
+          focusedBorder: const KitTextFormOutlineInputBorder(
+            borderSide: BorderSide(color: BasicVpnAppColors.textForm),
+          ),
+          errorBorder: const KitTextFormOutlineInputBorder(
+            borderSide: BorderSide(color: BasicVpnAppColors.textForm),
+          ),
+        ),
+        validator: (value) => value == null || value.isEmpty ? _errorMessage : null,
+      ),
     );
   }
+}
+
+class KitTextFormOutlineInputBorder extends OutlineInputBorder {
+  const KitTextFormOutlineInputBorder({super.borderSide})
+      : super(borderRadius: const BorderRadius.all(Radius.circular(15.0)));
 }
