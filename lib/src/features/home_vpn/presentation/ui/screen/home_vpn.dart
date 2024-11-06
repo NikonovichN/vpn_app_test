@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../src.dart';
 import '../widgets/swithcer.dart';
 
 class HomeVPNScreen extends StatelessWidget {
+  // TODO: should be intl
   static const _textConnected = 'Connected';
+  static const _titleApp = '917 VPN';
 
   const HomeVPNScreen({super.key});
 
@@ -21,7 +24,7 @@ class HomeVPNScreen extends StatelessWidget {
         return Column(
           children: [
             SizedBox(height: isDesktop ? 96.0 : (68.0 + MediaQuery.paddingOf(context).top)),
-            const Text('917 VPN', style: VpnAppFonts.appTitle),
+            const Text(_titleApp, style: VpnAppFonts.appTitle),
             const Spacer(),
             isWaitingConnection
                 ? const SizedBox(
@@ -32,16 +35,22 @@ class HomeVPNScreen extends StatelessWidget {
                       strokeWidth: 10.0,
                     ),
                   )
-                : Switcher(
-                    isConnected: isConnected,
-                    onPressed: isConnected
-                        ? context.read<VpnCubit>().stop
-                        : context.read<VpnCubit>().start,
+                : BlocBuilder<SettingsCubit, SettingsState>(
+                    builder: (context, state) {
+                      return Switcher(
+                        isConnected: isConnected,
+                        onPressed: state is SettingsLoaded
+                            ? isConnected
+                                ? context.read<VpnCubit>().stop
+                                : context.read<VpnCubit>().start
+                            : () => _dialogBuilder(context),
+                      );
+                    },
                   ),
             const SizedBox(height: 40.0),
             SizedBox(
               height: 68.0,
-              child: !isConnected
+              child: !isConnected || state.status?.duration == null
                   ? null
                   : Column(
                       mainAxisSize: MainAxisSize.min,
@@ -51,13 +60,53 @@ class HomeVPNScreen extends StatelessWidget {
                           style: VpnAppFonts.regularBold.copyWith(color: BasicVpnAppColors.main),
                         ),
                         Text(
-                          state.status?.duration.toString() ?? '',
+                          state.status!.duration.toString(),
                           style: VpnAppFonts.regular.copyWith(color: BasicVpnAppColors.main),
                         ),
                       ],
                     ),
             ),
             const Spacer(),
+          ],
+        );
+      },
+    );
+  }
+
+  static const _titleDialog = 'Settings';
+  static const _descriptionDialog =
+      'Something went wrong with settings. Please try to update configuration!';
+  static const _closeButton = 'Close';
+  static const _goButton = 'Go';
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: BasicVpnAppColors.dark,
+          title: const Text(_titleDialog, style: VpnAppFonts.appTitle),
+          content: const Text(_descriptionDialog, style: VpnAppFonts.regular),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: VpnAppFonts.regularBold.copyWith(color: BasicVpnAppColors.main),
+              ),
+              child: const Text(_closeButton),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: VpnAppFonts.regularBold.copyWith(color: BasicVpnAppColors.main),
+              ),
+              child: const Text(_goButton),
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.go(RouterPath.settings.path);
+              },
+            ),
           ],
         );
       },

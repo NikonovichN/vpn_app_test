@@ -3,13 +3,18 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:openvpn_flutter/openvpn_flutter.dart';
+import 'package:vpn_app_test/src/src.dart';
 
 part 'vpn_state.dart';
 
 class VpnCubit extends Cubit<VpnState> {
   late OpenVPN engine;
 
-  VpnCubit() : super(const VpnState()) {
+  final SettingsRepository _repository;
+
+  VpnCubit({required SettingsRepository repository})
+      : _repository = repository,
+        super(const VpnState()) {
     engine = OpenVPN(
       onVpnStatusChanged: _onVpnStatusChanged,
       onVpnStageChanged: _onVpnStageChanged,
@@ -45,6 +50,12 @@ class VpnCubit extends Cubit<VpnState> {
   }
 
   Future<void> start() async {
+    final settings = await _repository.read();
+
+    if (settings.isLeft) {
+      return;
+    }
+
     var config = await rootBundle.loadString('assets/open_vpn_config.ovpn');
 
     if (config.contains('cipher AES-128-CBC') && !config.contains('data-ciphers')) {
@@ -60,9 +71,9 @@ class VpnCubit extends Cubit<VpnState> {
 
     engine.connect(
       config,
-      "MY VPN",
-      username: "vpn",
-      password: "vpn",
+      settings.right.serverAddress,
+      username: settings.right.login,
+      password: settings.right.password,
       certIsRequired: true,
     );
   }
