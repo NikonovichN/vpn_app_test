@@ -69,5 +69,14 @@ class VpnCubit extends Cubit<VpnState> {
 
   void stop() async {
     engine.disconnect();
+    emit(state.copyWith(status: null, stage: null));
   }
+}
+
+enum StageVpnStatus {
+  connected,
+  wait_connection,
+  disconnected,
+  authenticating,
+  vpn_generate_config
 }

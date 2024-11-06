@@ -24,6 +24,24 @@ class _SwitcherState extends State<Switcher> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this, duration: _animationDuration);
+    _move();
+  }
+
+  @override
+  void didUpdateWidget(covariant Switcher oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isConnected != widget.isConnected) {
+      _move();
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _move() {
     _circleAnimation = AlignmentTween(
       begin: widget.isConnected ? Alignment.topCenter : Alignment.bottomCenter,
       end: widget.isConnected ? Alignment.bottomCenter : Alignment.topCenter,
@@ -31,12 +49,6 @@ class _SwitcherState extends State<Switcher> with SingleTickerProviderStateMixin
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override
@@ -54,14 +66,7 @@ class _SwitcherState extends State<Switcher> with SingleTickerProviderStateMixin
         ),
       ),
       child: GestureDetector(
-        onTap: () {
-          if (_animationController.isCompleted) {
-            _animationController.reverse();
-          } else {
-            _animationController.forward();
-          }
-          widget.onPressed();
-        },
+        onTap: widget.onPressed,
         child: Stack(
           children: [
             if (!widget.isConnected)
