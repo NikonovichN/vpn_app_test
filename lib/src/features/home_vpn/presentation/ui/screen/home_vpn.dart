@@ -39,7 +39,7 @@ class HomeVPNScreen extends StatelessWidget {
                           style: VpnAppFonts.regularBold.copyWith(color: BasicVpnAppColors.main),
                         ),
                         Text(
-                          '00:01:35',
+                          state.status?.duration.toString() ?? '',
                           style: VpnAppFonts.regular.copyWith(color: BasicVpnAppColors.main),
                         ),
                       ],

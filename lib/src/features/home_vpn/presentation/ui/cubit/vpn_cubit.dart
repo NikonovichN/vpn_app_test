@@ -45,7 +45,18 @@ class VpnCubit extends Cubit<VpnState> {
   }
 
   Future<void> start() async {
-    final config = await rootBundle.loadString('assets/open_vpn.net_tcp_443.ovpn');
+    var config = await rootBundle.loadString('assets/open_vpn_config.ovpn');
+
+    if (config.contains('cipher AES-128-CBC') && !config.contains('data-ciphers')) {
+      config = config.replaceAll('cipher AES-128-CBC', '''cipher AES-128-CBC
+    data-ciphers 'AES-128-CBC'
+    data-ciphers-fallback 'AES-128-CBC\'''');
+    }
+    if (config.contains('cipher AES-256-CBC') && !config.contains('data-ciphers')) {
+      config = config.replaceAll('cipher AES-256-CBC', '''cipher AES-256-CBC
+    data-ciphers 'AES-256-CBC'
+    data-ciphers-fallback 'AES-256-CBC\'''');
+    }
 
     engine.connect(
       config,
