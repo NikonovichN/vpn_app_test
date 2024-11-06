@@ -17,12 +17,17 @@ class SettingsCubit extends Cubit<SettingsState> {
     required String serverAddress,
     required String login,
     required String password,
-  }) async =>
-      await _repository.save(SettingsEntity(
-        serverAddress: serverAddress,
-        login: login,
-        password: password,
-      ));
+  }) async {
+    final result = await _repository.save(SettingsEntity(
+      serverAddress: serverAddress,
+      login: login,
+      password: password,
+    ));
+
+    if (result.isRight) {
+      load();
+    }
+  }
 
   Future<void> load() async {
     emit(SettingsLoading());
