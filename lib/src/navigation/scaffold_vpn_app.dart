@@ -6,12 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:vpn_app_test/src/src.dart';
 import 'package:vpn_app_test/src/di/injections.dart';
 
+import 'navigation_bar.dart';
+
 class ScaffoldVpnApp extends StatelessWidget {
   static const _backgroundImage = 'assets/images/background.png';
 
   final Widget child;
-
-  const ScaffoldVpnApp({super.key, required this.child});
+  final GoRouterState routerState;
+  const ScaffoldVpnApp({super.key, required this.child, required this.routerState});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,9 @@ class ScaffoldVpnApp extends StatelessWidget {
       providers: [
         BlocProvider<SettingsCubit>(
           create: (_) => injector<SettingsCubit>()..load(),
+        ),
+        BlocProvider<VpnCubit>(
+          create: (_) => injector<VpnCubit>()..initialize(),
         ),
       ],
       child: Scaffold(
@@ -39,21 +44,9 @@ class ScaffoldVpnApp extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      child,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () => context.go(RouterPath.home.path),
-                            child: const Text('Home'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => context.go(RouterPath.settings.path),
-                            child: const Text('Settings'),
-                          ),
-                        ],
-                      )
+                      Flexible(child: child),
+                      VpnAppNavigationBar(routerState: routerState),
+                      const SizedBox(height: 40.0),
                     ],
                   ),
                 ),

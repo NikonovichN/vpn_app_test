@@ -17,7 +17,7 @@ class VpnAppFonts {
   static const TextStyle regularBold = TextStyle(
     fontSize: 24,
     fontFamily: defaultFontFamily,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w500,
     color: BasicVpnAppColors.main,
   );
 
