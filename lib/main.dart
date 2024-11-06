@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: '917 VPN',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: BasicVpnAppColors.main,
         fontFamily: VpnAppFonts.defaultFontFamily,
       ),
       routerConfig: router,

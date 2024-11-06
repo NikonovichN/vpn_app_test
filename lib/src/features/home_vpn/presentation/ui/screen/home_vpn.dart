@@ -35,18 +35,7 @@ class HomeVPNScreen extends StatelessWidget {
                       strokeWidth: 10.0,
                     ),
                   )
-                : BlocBuilder<SettingsCubit, SettingsState>(
-                    builder: (context, state) {
-                      return Switcher(
-                        isConnected: isConnected,
-                        onPressed: state is SettingsLoaded
-                            ? isConnected
-                                ? context.read<VpnCubit>().stop
-                                : context.read<VpnCubit>().start
-                            : () => _dialogBuilder(context),
-                      );
-                    },
-                  ),
+                : _Switcher(isConnected: isConnected),
             const SizedBox(height: 40.0),
             SizedBox(
               height: 68.0,
@@ -72,12 +61,35 @@ class HomeVPNScreen extends StatelessWidget {
       },
     );
   }
+}
 
+class _Switcher extends StatelessWidget {
+  // TODO: should be intl
   static const _titleDialog = 'Settings';
   static const _descriptionDialog =
       'Something went wrong with settings. Please try to update configuration!';
   static const _closeButton = 'Close';
   static const _goButton = 'Go';
+
+  final bool isConnected;
+
+  const _Switcher({required this.isConnected});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return Switcher(
+          isConnected: isConnected,
+          onPressed: state is SettingsLoaded
+              ? isConnected
+                  ? context.read<VpnCubit>().stop
+                  : context.read<VpnCubit>().start
+              : () => _dialogBuilder(context),
+        );
+      },
+    );
+  }
 
   Future<void> _dialogBuilder(BuildContext context) {
     return showDialog<void>(
