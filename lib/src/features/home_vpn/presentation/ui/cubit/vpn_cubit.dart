@@ -3,13 +3,18 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:openvpn_flutter/openvpn_flutter.dart';
+import 'package:vpn_app_test/src/src.dart';
 
 part 'vpn_state.dart';
 
 class VpnCubit extends Cubit<VpnState> {
   late OpenVPN engine;
 
-  VpnCubit() : super(const VpnState()) {
+  final SettingsRepository _settingsRepository;
+
+  VpnCubit({required SettingsRepository settingsRepository})
+      : _settingsRepository = settingsRepository,
+        super(const VpnState()) {
     engine = OpenVPN(
       onVpnStatusChanged: _onVpnStatusChanged,
       onVpnStageChanged: _onVpnStageChanged,
@@ -17,21 +22,17 @@ class VpnCubit extends Cubit<VpnState> {
   }
 
   void _onVpnStatusChanged(VpnStatus? status) {
-    print('vpn_status: status ${status}');
     emit(state.copyWith(status: status));
   }
 
   void _onVpnStageChanged(VPNStage _, String stage) {
-    print('vpn_status: stage ${stage}');
     emit(state.copyWith(stage: stage));
   }
 
   Future<void> initialize() async {
     await engine.requestPermissionAndroid().then((onValue) {
-      print('vpn_status: granted - $onValue');
       emit(state.copyWith(granted: onValue));
     }).catchError((error) {
-      print('vpn_status: granted error - $error');
       emit(state.copyWith(granted: false));
     });
 
@@ -45,8 +46,16 @@ class VpnCubit extends Cubit<VpnState> {
   }
 
   Future<void> start() async {
+    final settings = await _settingsRepository.read();
+
+    if (settings.isLeft) {
+      return;
+    }
+
     var config = await rootBundle.loadString('assets/open_vpn_config.ovpn');
 
+    // WITH OPEN VPN I STUCK WITH ISSUE
+    // https://github.com/nizwar/openvpn_flutter/issues/122
     if (config.contains('cipher AES-128-CBC') && !config.contains('data-ciphers')) {
       config = config.replaceAll('cipher AES-128-CBC', '''cipher AES-128-CBC
     data-ciphers 'AES-128-CBC'
@@ -60,9 +69,9 @@ class VpnCubit extends Cubit<VpnState> {
 
     engine.connect(
       config,
-      "MY VPN",
-      username: "vpn",
-      password: "vpn",
+      settings.right.serverAddress,
+      username: settings.right.login,
+      password: settings.right.password,
       certIsRequired: true,
     );
   }

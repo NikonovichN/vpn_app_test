@@ -27,6 +27,6 @@ class DependencyInjections {
 
     // Blocs
     injector.registerSingleton<SettingsCubit>(SettingsCubit(repository: injector()));
-    injector.registerSingleton<VpnCubit>(VpnCubit());
+    injector.registerSingleton<VpnCubit>(VpnCubit(settingsRepository: injector()));
   }
 }
