@@ -25,7 +25,7 @@ final router = GoRouter(
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
-        return ScaffoldVpnApp(child: child);
+        return ScaffoldVpnApp(routerState: state, child: child);
       },
       routes: [
         GoRoute(

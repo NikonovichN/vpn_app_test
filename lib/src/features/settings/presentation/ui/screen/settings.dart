@@ -52,59 +52,62 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 320.0),
-      child: Column(
-        children: [
-          SizedBox(height: isDesktop ? 96.0 : (30.0 + MediaQuery.paddingOf(context).top)),
-          Text(
-            isDesktop ? _settingsTitleDesktop : _settingsTitleMobile,
-            style: isDesktop ? VpnAppFonts.appTitle : VpnAppFonts.regularBold,
-          ),
-          SizedBox(height: isDesktop ? 140.0 : 40.0),
-          Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _SettingTextFormField(
-                  hint: _addressHint,
-                  initialValue: widget.state?.serverAddress,
-                  controller: _addressServerTextController,
-                ),
-                _emptySpaceM,
-                _SettingTextFormField(
-                  hint: _loginHint,
-                  initialValue: widget.state?.login,
-                  controller: _loginTextController,
-                ),
-                _emptySpaceM,
-                _SettingTextFormField(
-                  hint: _passwordHint,
-                  obscureText: true,
-                  controller: _passwordTextController,
-                  initialValue: widget.state?.password,
-                ),
-                _emptySpaceL,
-                SizedBox(
-                  width: double.infinity,
-                  child: VpnAppButton.primary(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<SettingsCubit>().save(
-                              serverAddress: _addressServerTextController.text,
-                              login: _loginTextController.text,
-                              password: _passwordTextController.text,
-                            );
-                      }
-                    },
-                    child: const Text(_textButton),
-                  ),
-                )
-              ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 36.0),
+        child: Column(
+          children: [
+            SizedBox(height: isDesktop ? 96.0 : (30.0 + MediaQuery.paddingOf(context).top)),
+            Text(
+              isDesktop ? _settingsTitleDesktop : _settingsTitleMobile,
+              style: isDesktop ? VpnAppFonts.appTitle : VpnAppFonts.regularBold,
             ),
-          ),
-        ],
+            SizedBox(height: isDesktop ? 140.0 : 40.0),
+            Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _SettingTextFormField(
+                    hint: _addressHint,
+                    initialValue: widget.state?.serverAddress,
+                    controller: _addressServerTextController,
+                  ),
+                  _emptySpaceM,
+                  _SettingTextFormField(
+                    hint: _loginHint,
+                    initialValue: widget.state?.login,
+                    controller: _loginTextController,
+                  ),
+                  _emptySpaceM,
+                  _SettingTextFormField(
+                    hint: _passwordHint,
+                    obscureText: true,
+                    controller: _passwordTextController,
+                    initialValue: widget.state?.password,
+                  ),
+                  _emptySpaceL,
+                  SizedBox(
+                    width: double.infinity,
+                    child: VpnAppButton.primary(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<SettingsCubit>().save(
+                                serverAddress: _addressServerTextController.text,
+                                login: _loginTextController.text,
+                                password: _passwordTextController.text,
+                              );
+                        }
+                      },
+                      child: const Text(_textButton),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
