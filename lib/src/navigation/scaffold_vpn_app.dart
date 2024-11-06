@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:vpn_app_test/src/src.dart';
+import '../features/features.dart';
+import '../ui_kit/ui_kit.dart';
 import 'package:vpn_app_test/src/di/injections.dart';
 
 import 'navigation_bar.dart';
